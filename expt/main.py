@@ -5,13 +5,25 @@ import scipy.stats as ss
 import pandas as pd
 
 from psychopy import prefs
-prefs.hardware['audioLib'] = ['PTB']
+prefs.hardware['audioLib'] = ['PTB', 'sounddevice', 'pyo', 'pysoundcard', 'pygame']
 from psychopy import sound
 
 from psychopy import logging
 from itertools import product
 import yaml
 from session import SomaVisualSession
+
+
+
+# for i in {1..5}
+# do
+#     for t in VM VO AM
+#     do
+#         python main.py 06 $i $t
+#     done
+# done
+
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('subject', default=None, nargs='?')

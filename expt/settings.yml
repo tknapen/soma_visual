@@ -18,10 +18,11 @@ eyetracker:
 stimuli:
   fix_radius: 2.5
   fix_color: 0.5
+  sound_volume: 1.0
 
 design:
-  start_duration: 12
-  end_duration: 12
+  start_duration: 24
+  end_duration: 15
   stim_duration: 2.2
 
 various:

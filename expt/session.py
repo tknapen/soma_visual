@@ -3,7 +3,7 @@ import numpy as np
 import scipy.stats as ss
 
 from psychopy import prefs
-prefs.hardware['audioLib'] = ['PTB']
+prefs.hardware['audioLib'] = ['PTB', 'sounddevice', 'pyo', 'pysoundcard', 'pygame']
 from psychopy import sound
 
 from exptools2.core import Session, PylinkEyetrackerSession
@@ -32,7 +32,7 @@ class SomaVisualSession(PylinkEyetrackerSession):
         print(f'running expt using task {task}')
 
         # fugly hack to avoid wait at startup
-        self.win._monitorFrameRate = 60.0
+        # self.win._monitorFrameRate = 60.0
 
         self.movies = [
             'eyebrows',
@@ -102,7 +102,7 @@ class SomaVisualSession(PylinkEyetrackerSession):
         # self.unique_movie_files = [os.path.join(os.path.abspath(os.getcwd()), 'stimuli', 'movs',  'op', m+"_small.avi") for m in self.unique_movies]
 
         self.unique_movie_stims = [MovieStim3(self.win, filename=imf, loop=True, noAudio=True) for imf in self.unique_movie_files]
-        self.unique_sound_stims = [sound.Sound(value=sf) for sf in self.unique_sound_files]
+        self.unique_sound_stims = [sound.Sound(value=sf, volume=self.settings['stimuli'].get('sound_volume') ) for sf in self.unique_sound_files]
 
         self.movie_stims = [self.unique_movie_stims[self.unique_movies.index(s)] for s in self.movies]
         self.sound_stims = [self.unique_sound_stims[self.unique_movies.index(s)] for s in self.movies]
@@ -131,16 +131,16 @@ class SomaVisualSession(PylinkEyetrackerSession):
             instruct_text = 'close your eyes when scanner starts, move in unison with instruction'
         print(instruct_text)
 
-        instruction_trial = InstructionTrial(session=self, 
-                                            trial_nr=0, 
-                                            phase_durations=[np.inf],
-                                            txt=instruct_text,
-                                            keys=['space'])
+        # instruction_trial = InstructionTrial(session=self, 
+        #                                     trial_nr=0, 
+        #                                     phase_durations=[np.inf],
+        #                                     txt=,
+        #                                     keys=['space'])
 
         dummy_trial = DummyWaiterTrial(session=self, 
                                             trial_nr=1, 
                                             phase_durations=[np.inf, self.settings['design'].get('start_duration')],
-                                            txt='Waiting for experiment to start')
+                                            txt=instruct_text)
 
         outro_trial = OutroTrial(session=self, 
                                             trial_nr=len(self.movies)+2, 
@@ -149,7 +149,7 @@ class SomaVisualSession(PylinkEyetrackerSession):
 
 
 
-        self.trials = [instruction_trial, dummy_trial]
+        self.trials = [dummy_trial]
         for i in range(len(self.movies)):
             self.trials.append(SomaVisualTrial(
                 session=self, 
